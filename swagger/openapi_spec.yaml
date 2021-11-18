@@ -1,0 +1,3681 @@
+openapi: 3.0.3
+info:
+  title: Meltwater API
+  description: The Meltwater Public API
+  contact:
+    name: Meltwater Support
+    url: https://developer.meltwater.com/
+    email: support@api.meltwater.com
+  version: '1.0'
+servers:
+  - url: https://api.meltwater.com/
+security:
+  - apikey: [ ]
+tags:
+  - name: Recurring Exports
+    description: Manage Recurring Exports
+  - name: Searches
+    description: Manage Saved Searches
+  - name: Source Selections
+    description: Query Source Selections
+paths:
+  /v3/exports/recurring:
+    post:
+      tags:
+        - Recurring Exports
+      summary: Creates a new recurring export
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringExportResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Bad Request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: Invalid data
+                      details: Invalid JSON payload
+                description: Bad Request
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unauthorized request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: AUTH
+                      title: Unauthorized
+                      details: Invalid or expired authorization header
+                description: Unauthorized request
+        '403':
+          description: Permission Denied
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Permission denied
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: ENTITLEMENT
+                      title: Entitlement missing
+                      details: 'You are missing required entitlements, in order to access
+                      given content: ["news", "social"]. Please contact your sales
+                      representative to add the necessary entitlement to your Meltwater
+                      account.'
+                description: Permission denied
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Not Found
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: EXPORT
+                      title: Unknown resource
+                      details: The resource id you provided (1234) is unknown
+                description: Not Found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unprocessable entity
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: 'Validation error for field: window_size'
+                      details: is not a valid integer
+                description: Unprocessable entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Internal Server Error
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: INTERNAL
+                      title: Internal Server error
+                      details: Something went wrong behind the scenes...
+                description: Internal Server Error
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Service Unavailable
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: SEARCH
+                      title: Service unavailable
+                      details: Temporarily unable to handle the request, try again later
+                description: Service Unavailable
+      parameters:
+        - required: false
+          name: company_id
+          in: query
+          description: Company which owns the given search_id. If not specified your
+            default company is used.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecurringExportRequest'
+        description: 'Export object to create.
+
+
+          The `timezone` field specifies what timezone the `window_time` field should
+          be interpreted as.
+
+
+          The `window_time_unit` field determines the size of the export window and
+          often the export will be refreshed.
+
+
+          Please see the Model Schema for possible values of `window_time_unit`.
+
+          '
+      operationId: create_recurring_export
+      description: ''
+    get:
+      tags:
+        - Recurring Exports
+      summary: Get a list of all your recurring exports
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringExportListResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Bad Request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: Invalid data
+                      details: Invalid JSON payload
+                description: Bad Request
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unauthorized request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: AUTH
+                      title: Unauthorized
+                      details: Invalid or expired authorization header
+                description: Unauthorized request
+        '403':
+          description: Permission Denied
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Permission denied
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: ENTITLEMENT
+                      title: Entitlement missing
+                      details: 'You are missing required entitlements, in order to access
+                      given content: ["news", "social"]. Please contact your sales
+                      representative to add the necessary entitlement to your Meltwater
+                      account.'
+                description: Permission denied
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Not Found
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: EXPORT
+                      title: Unknown resource
+                      details: The resource id you provided (1234) is unknown
+                description: Not Found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unprocessable entity
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: 'Validation error for field: window_size'
+                      details: is not a valid integer
+                description: Unprocessable entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Internal Server Error
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: INTERNAL
+                      title: Internal Server error
+                      details: Something went wrong behind the scenes...
+                description: Internal Server Error
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Service Unavailable
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: SEARCH
+                      title: Service unavailable
+                      details: Temporarily unable to handle the request, try again later
+                description: Service Unavailable
+      operationId: list_recurring_exports
+      description: ''
+  /v3/exports/recurring/{id}:
+    get:
+      tags:
+        - Recurring Exports
+      summary: Get details of a recurring export
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringExportResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Bad Request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: Invalid data
+                      details: Invalid JSON payload
+                description: Bad Request
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unauthorized request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: AUTH
+                      title: Unauthorized
+                      details: Invalid or expired authorization header
+                description: Unauthorized request
+        '403':
+          description: Permission Denied
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Permission denied
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: ENTITLEMENT
+                      title: Entitlement missing
+                      details: 'You are missing required entitlements, in order to access
+                      given content: ["news", "social"]. Please contact your sales
+                      representative to add the necessary entitlement to your Meltwater
+                      account.'
+                description: Permission denied
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Not Found
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: EXPORT
+                      title: Unknown resource
+                      details: The resource id you provided (1234) is unknown
+                description: Not Found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unprocessable entity
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: 'Validation error for field: window_size'
+                      details: is not a valid integer
+                description: Unprocessable entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Internal Server Error
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: INTERNAL
+                      title: Internal Server error
+                      details: Something went wrong behind the scenes...
+                description: Internal Server Error
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Service Unavailable
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: SEARCH
+                      title: Service unavailable
+                      details: Temporarily unable to handle the request, try again later
+                description: Service Unavailable
+      parameters:
+        - required: true
+          name: id
+          in: path
+          description: Export id
+          example: 123
+          schema:
+            type: integer
+      operationId: show_recurring_export
+      description: ''
+    delete:
+      tags:
+        - Recurring Exports
+      summary: Removes an existing recurring export
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Bad Request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: Invalid data
+                      details: Invalid JSON payload
+                description: Bad Request
+        '401':
+          description: Unauthorized Request
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unauthorized request
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: AUTH
+                      title: Unauthorized
+                      details: Invalid or expired authorization header
+                description: Unauthorized request
+        '403':
+          description: Permission Denied
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Permission denied
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: ENTITLEMENT
+                      title: Entitlement missing
+                      details: 'You are missing required entitlements, in order to access
+                      given content: ["news", "social"]. Please contact your sales
+                      representative to add the necessary entitlement to your Meltwater
+                      account.'
+                description: Permission denied
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Not Found
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: EXPORT
+                      title: Unknown resource
+                      details: The resource id you provided (1234) is unknown
+                description: Not Found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Unprocessable entity
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: VALIDATION
+                      title: 'Validation error for field: window_size'
+                      details: is not a valid integer
+                description: Unprocessable entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Internal Server Error
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: INTERNAL
+                      title: Internal Server error
+                      details: Something went wrong behind the scenes...
+                description: Internal Server Error
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Service Unavailable
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - type
+                        - details
+                        - title
+                      properties:
+                        type:
+                          type: string
+                          example: VALIDATION
+                          description: Category of error
+                        title:
+                          type: string
+                          example: 'Validation error for field: type'
+                          description: Title of error
+                        details:
+                          type: string
+                          example: This field cannot be updated
+                          description: Details about the error
+                      additionalProperties: false
+                    description: List of problems with the request
+                example:
+                  errors:
+                    - type: SEARCH
+                      title: Service unavailable
+                      details: Temporarily unable to handle the request, try again later
+                description: Service Unavailable
+      parameters:
+        - required: true
+          name: id
+          in: path
+          description: Export id
+          example: 123
+          schema:
+            type: integer
+      operationId: delete_recurring_export
+      description: ''
+  /v3/searches:
+    get:
+      tags:
+        - Searches
+      summary: Get a list of all your searches
+      operationId: list_searches
+      parameters:
+        - name: company_id
+          in: query
+          description: Company which owns the given search. If not specified your default
+            company is used.
+          required: false
+          schema:
+            type: string
+        - name: include_query
+          in: query
+          description: Include query object in searches, default "false"
+          required: false
+          schema:
+            type: boolean
+        - name: query_type
+          in: query
+          description: Only return searches of the specified query type, if omitted
+            searches of all query types will be returned
+          required: false
+          schema:
+            type: string
+            enum:
+              - boolean
+              - keyword
+              - combined
+      responses:
+        '200':
+          description: List of Searches
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchListResponse'
+              examples:
+                Search List No Queries:
+                  summary: Search listing without queries included
+                  value:
+                    searches:
+                      - type: news
+                        category: mi
+                        updated: '2020-08-23T08:25:56Z'
+                        id: 1025
+                        name: Electric Cars
+                        search_id: 1025
+                      - type: social
+                        category: explore
+                        updated: '2020-08-23T08:25:56Z'
+                        id: 1027
+                        name: Pokemon
+                        search_id: 1027
+                Search List With Queries:
+                  summary: Search listing with queries included
+                  value:
+                    searches:
+                      - type: news
+                        category: mi
+                        updated: '2020-08-23T08:25:56Z'
+                        id: 1024
+                        name: Electric Cars
+                        query:
+                          source_selection_id: 1
+                          case_sensitivity: 'no'
+                          boolean: Tesla OR (Volvo NEAR electric)
+                          type: boolean
+                        search_id: 1024
+                      - type: social
+                        category: explore
+                        updated: '2020-08-23T08:25:56Z'
+                        id: 1026
+                        name: Pokemon
+                        query:
+                          filter_set:
+                            id: 123456
+                            name: my filter set
+                            subtype: custom
+                            type: saved
+                          case_sensitivity: 'no'
+                          not_keywords: [ ]
+                          any_keywords:
+                            - Pokemon
+                            - Pokémon
+                          all_keywords: [ ]
+                          type: keyword
+                        search_id: 1026
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+      description: ''
+    post:
+      tags:
+        - Searches
+      summary: Create a search
+      operationId: create_search
+      parameters:
+        - name: company_id
+          in: query
+          description: Company which owns the given search. If not specified your default
+            company is used.
+          required: false
+          schema:
+            type: string
+        - name: dry_run
+          in: query
+          description: If set to "true" only performs validation of the search, does
+            not create the resource on success. Default "false".
+          required: false
+          schema:
+            type: boolean
+      requestBody:
+        description: A single search request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleSearchRequest'
+            examples:
+              BooleanMi:
+                summary: Example boolean query
+                value:
+                  search:
+                    type: news
+                    name: Example boolean query
+                    query:
+                      source_selection_id: 123
+                      case_sensitivity: 'yes'
+                      boolean: Tesla OR (Volvo NEAR electric)
+                      type: boolean
+              BooleanExplore:
+                summary: Example explore boolean query
+                value:
+                  search:
+                    type: news
+                    name: Example explore boolean query
+                    query:
+                      filter_set:
+                        id: 123
+                        type: saved
+                      case_sensitivity: 'yes'
+                      boolean: Tesla OR (Volvo NEAR electric)
+                      type: boolean
+                    category: explore
+              KeywordMi:
+                summary: Example keyword query
+                value:
+                  search:
+                    type: social
+                    name: Example keyword query
+                    query:
+                      source_selection_id: 456
+                      case_sensitivity: hybrid
+                      not_keywords:
+                        - Vodka
+                      any_keywords:
+                        - Tesla
+                        - Volvo
+                      all_keywords:
+                        - Car
+                      type: keyword
+                    category: mi
+              KeywordExplore:
+                summary: Example explore keyword query
+                value:
+                  search:
+                    type: social
+                    name: Example explore keyword query
+                    query:
+                      filter_set:
+                        id: 123
+                        type: saved
+                      case_sensitivity: hybrid
+                      not_keywords:
+                        - Vodka
+                      any_keywords:
+                        - Tesla
+                        - Volvo
+                      all_keywords:
+                        - Car
+                      type: keyword
+                    category: explore
+              CombinedExplore:
+                summary: Example explore combined query
+                value:
+                  search:
+                    type: social
+                    name: Example explore combined query
+                    query:
+                      filter_set:
+                        id: 123
+                        type: saved
+                      not_searches:
+                        - 1
+                      any_searches:
+                        - 2
+                      all_searches:
+                        - 3
+                      type: combined
+                    category: explore
+        required: true
+      responses:
+        '201':
+          description: A single Search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleSearch'
+              examples:
+                Boolean MI Search:
+                  summary: Boolean MI Example with a Query
+                  value:
+                    search:
+                      type: news
+                      category: mi
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1024
+                      name: Electric Cars
+                      query:
+                        source_selection_id: 1
+                        case_sensitivity: 'no'
+                        boolean: Tesla OR (Volvo NEAR electric)
+                        type: boolean
+                      search_id: 1024
+                Boolean MI Search No Query:
+                  summary: Boolean MI Search with query hidden
+                  value:
+                    search:
+                      type: news
+                      category: mi
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1025
+                      name: Electric Cars
+                      search_id: 1025
+                Keyword Explore Search:
+                  summary: Keyword Explore Search Example with a Query
+                  value:
+                    search:
+                      type: social
+                      category: explore
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1026
+                      name: Pokemon
+                      query:
+                        filter_set:
+                          id: 123456
+                          name: my filter set
+                          subtype: custom
+                          type: saved
+                        case_sensitivity: 'no'
+                        not_keywords: [ ]
+                        any_keywords:
+                          - Pokemon
+                          - Pokémon
+                        all_keywords: [ ]
+                        type: keyword
+                      search_id: 1026
+                Keyword Explore Search No Query:
+                  summary: Keyword Explore Search Example with query hidden
+                  value:
+                    search:
+                      type: social
+                      category: explore
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1027
+                      name: Pokemon
+                      search_id: 1027
+        '204':
+          description: No content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+      description: ''
+  /v3/searches/{id}:
+    get:
+      tags:
+        - Searches
+      summary: Get an individual search
+      operationId: get_search
+      parameters:
+        - name: id
+          in: path
+          description: Search id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1234
+        - name: company_id
+          in: query
+          description: Company which owns the given search. If not specified your default
+            company is used.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single Search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleSearch'
+              examples:
+                Boolean MI Search:
+                  summary: Boolean MI Example with a Query
+                  value:
+                    search:
+                      type: news
+                      category: mi
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1024
+                      name: Electric Cars
+                      query:
+                        source_selection_id: 1
+                        case_sensitivity: 'no'
+                        boolean: Tesla OR (Volvo NEAR electric)
+                        type: boolean
+                      search_id: 1024
+                Boolean MI Search No Query:
+                  summary: Boolean MI Search with query hidden
+                  value:
+                    search:
+                      type: news
+                      category: mi
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1025
+                      name: Electric Cars
+                      search_id: 1025
+                Keyword Explore Search:
+                  summary: Keyword Explore Search Example with a Query
+                  value:
+                    search:
+                      type: social
+                      category: explore
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1026
+                      name: Pokemon
+                      query:
+                        filter_set:
+                          id: 123456
+                          name: my filter set
+                          subtype: custom
+                          type: saved
+                        case_sensitivity: 'no'
+                        not_keywords: [ ]
+                        any_keywords:
+                          - Pokemon
+                          - Pokémon
+                        all_keywords: [ ]
+                        type: keyword
+                      search_id: 1026
+                Keyword Explore Search No Query:
+                  summary: Keyword Explore Search Example with query hidden
+                  value:
+                    search:
+                      type: social
+                      category: explore
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1027
+                      name: Pokemon
+                      search_id: 1027
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+      description: ''
+    put:
+      tags:
+        - Searches
+      summary: Update an individual search
+      operationId: update_search
+      parameters:
+        - name: id
+          in: path
+          description: Search id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1234
+        - name: company_id
+          in: query
+          description: Company which owns the given search. If not specified your default
+            company is used.
+          required: false
+          schema:
+            type: string
+        - name: dry_run
+          in: query
+          description: If set to "true" only performs validation of the search, does
+            not create the resource on success. Default "false".
+          required: false
+          schema:
+            type: boolean
+      requestBody:
+        description: A single search request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleSearchRequest'
+            examples:
+              BooleanMi:
+                summary: Example boolean query
+                value:
+                  search:
+                    type: news
+                    name: Example boolean query
+                    query:
+                      source_selection_id: 123
+                      case_sensitivity: 'yes'
+                      boolean: Tesla OR (Volvo NEAR electric)
+                      type: boolean
+              BooleanExplore:
+                summary: Example explore boolean query
+                value:
+                  search:
+                    type: news
+                    name: Example explore boolean query
+                    query:
+                      filter_set:
+                        id: 123
+                        type: saved
+                      case_sensitivity: 'yes'
+                      boolean: Tesla OR (Volvo NEAR electric)
+                      type: boolean
+                    category: explore
+              KeywordMi:
+                summary: Example keyword query
+                value:
+                  search:
+                    type: social
+                    name: Example keyword query
+                    query:
+                      source_selection_id: 456
+                      case_sensitivity: hybrid
+                      not_keywords:
+                        - Vodka
+                      any_keywords:
+                        - Tesla
+                        - Volvo
+                      all_keywords:
+                        - Car
+                      type: keyword
+                    category: mi
+              KeywordExplore:
+                summary: Example explore keyword query
+                value:
+                  search:
+                    type: social
+                    name: Example explore keyword query
+                    query:
+                      filter_set:
+                        id: 123
+                        type: saved
+                      case_sensitivity: hybrid
+                      not_keywords:
+                        - Vodka
+                      any_keywords:
+                        - Tesla
+                        - Volvo
+                      all_keywords:
+                        - Car
+                      type: keyword
+                    category: explore
+              CombinedExplore:
+                summary: Example explore combined query
+                value:
+                  search:
+                    type: social
+                    name: Example explore combined query
+                    query:
+                      filter_set:
+                        id: 123
+                        type: saved
+                      not_searches:
+                        - 1
+                      any_searches:
+                        - 2
+                      all_searches:
+                        - 3
+                      type: combined
+                    category: explore
+        required: true
+      responses:
+        '200':
+          description: A single Search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleSearch'
+              examples:
+                Boolean MI Search:
+                  summary: Boolean MI Example with a Query
+                  value:
+                    search:
+                      type: news
+                      category: mi
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1024
+                      name: Electric Cars
+                      query:
+                        source_selection_id: 1
+                        case_sensitivity: 'no'
+                        boolean: Tesla OR (Volvo NEAR electric)
+                        type: boolean
+                      search_id: 1024
+                Boolean MI Search No Query:
+                  summary: Boolean MI Search with query hidden
+                  value:
+                    search:
+                      type: news
+                      category: mi
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1025
+                      name: Electric Cars
+                      search_id: 1025
+                Keyword Explore Search:
+                  summary: Keyword Explore Search Example with a Query
+                  value:
+                    search:
+                      type: social
+                      category: explore
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1026
+                      name: Pokemon
+                      query:
+                        filter_set:
+                          id: 123456
+                          name: my filter set
+                          subtype: custom
+                          type: saved
+                        case_sensitivity: 'no'
+                        not_keywords: [ ]
+                        any_keywords:
+                          - Pokemon
+                          - Pokémon
+                        all_keywords: [ ]
+                        type: keyword
+                      search_id: 1026
+                Keyword Explore Search No Query:
+                  summary: Keyword Explore Search Example with query hidden
+                  value:
+                    search:
+                      type: social
+                      category: explore
+                      updated: '2020-08-23T08:25:56Z'
+                      id: 1027
+                      name: Pokemon
+                      search_id: 1027
+        '204':
+          description: No content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+      description: ''
+    delete:
+      tags:
+        - Searches
+      summary: Delete an individual search
+      operationId: delete_search
+      parameters:
+        - name: id
+          in: path
+          description: Search id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1234
+        - name: company_id
+          in: query
+          description: Company which owns the given search. If not specified your default
+            company is used.
+          required: false
+          schema:
+            type: string
+      responses:
+        '204':
+          description: ''
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MissingResourceResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InvalidPermissionsResponse'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntityCompanyId'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ServiceUnavailable'
+      security:
+        - apikey: [ ]
+      description: ''
+  /v3/source_selections:
+    get:
+      tags:
+        - Source Selections
+      summary: Get a list of all your source selections
+      operationId: list_source_selections
+      parameters:
+        - name: company_id
+          in: query
+          description: Company which owns the given source selections. If not specified
+            your default company is used.
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Only return source selections with the specified type. If this
+            parameter is omitted source selections of all types will be returned.
+          required: false
+          schema:
+            type: string
+            enum:
+              - news
+              - social
+              - broadcast
+      responses:
+        '200':
+          description: List of Source Selections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceSelectionList'
+              example:
+                source_selections:
+                  - type: news
+                    name: German and english news
+                    id: 34512
+                    custom: true
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+      description: ''
+  /v3/searches/{id}/count:
+    get:
+      tags:
+        - Searches
+      summary: Get an approximate count of results for the search over a particular
+        period
+      operationId: search_count
+      parameters:
+        - name: id
+          in: path
+          description: Search id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1234
+        - name: company_id
+          in: query
+          description: Company which owns the given search. If not specified your default
+            company is used.
+          required: false
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: 'The start date of the search to count result for. Default: `two
+          weeks ago` in ISO8601 format.'
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          description: 'The end date of the search to count result for. Default: `now`
+          in ISO8601 format.'
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Search Count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchCountResponse'
+              example:
+                count:
+                  total: 901382
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+      description: ''
+  /v3/filter_sets:
+    get:
+      tags:
+        - Filter Sets
+      summary: Get a list of all search filter sets
+      operationId: list_filter_sets
+      parameters:
+        - name: company_id
+          in: query
+          description: Company which owns the given filter sets. If not specified your
+            default company is used.
+          required: false
+          schema:
+            type: string
+        - name: include_quickpicks
+          in: query
+          description: Include meltwater-provided QUICKPICK filter sets, default "false"
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of Filter Sets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterSetList'
+              example:
+                filter_sets:
+                  - id: 123
+                    name: English and from the UK
+                    subtype: custom
+                    type: saved
+                  - id: 456
+                    name: Well known french journalists
+                    subtype: quickpick
+                    type: saved
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+      security:
+        - apikey: [ ]
+
+components:
+  schemas:
+    SingleSearchRequest:
+      required:
+        - search
+      type: object
+      properties:
+        search:
+          $ref: '#/components/schemas/SearchRequestV2'
+      title: Search Resource
+      description: Search Resource
+      additionalProperties: false
+    SearchRequestV2:
+      required:
+        - type
+        - name
+        - query
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of content that the search is for
+          enum:
+            - news
+            - social
+            - broadcast
+        name:
+          type: string
+          description: The name associated with this search
+          example: Electric cars
+        query:
+          $ref: '#/components/schemas/Query'
+        category:
+          type: string
+          description: The category of search to create this under, defaults to `mi`
+          enum:
+            - mi
+            - explore
+        id:
+          type: integer
+          example: 1024
+          description: Identifier
+      title: Search
+      example:
+        type: news
+        query:
+          type: boolean
+          source_selection_id: 1
+          case_sensitivity: false
+          boolean: Tesla OR (Volvo NEAR electric)
+        name: Electric cars
+      description: Search
+      additionalProperties: false
+    Query:
+      description: Query associated with a search
+      oneOf:
+        - $ref: '#/components/schemas/BooleanQuery'
+        - $ref: '#/components/schemas/KeywordQuery'
+        - $ref: '#/components/schemas/CombinedQuery'
+      discriminator:
+        propertyName: type
+        mapping:
+          boolean: '#/components/schemas/BooleanQuery'
+          keyword: '#/components/schemas/KeywordQuery'
+          combined: '#/components/schemas/CombinedQuery'
+    BooleanQuery:
+      required:
+        - case_sensitivity
+        - boolean
+      type: object
+      properties:
+        source_selection_id:
+          type: integer
+          description: The optional source selection id for the search query (mi only)
+          format: int64
+        filter_set:
+          $ref: '#/components/schemas/FilterSet'
+        case_sensitivity:
+          type: string
+          description: The case sensitivity for this query
+          enum:
+            - 'yes'
+            - 'no'
+            - hybrid
+        boolean:
+          type: string
+          description: The boolean query string
+    FilterSet:
+      description: The optional Filter Set to apply to this search (explore only)
+      oneOf:
+        - $ref: '#/components/schemas/SavedFilterSet'
+        - $ref: '#/components/schemas/EmbeddedFilterSet'
+      discriminator:
+        propertyName: type
+        mapping:
+          saved: '#/components/schemas/SavedFilterSet'
+          embedded: '#/components/schemas/EmbeddedFilterSet'
+    SavedFilterSet:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID number for the Saved Filter Set
+          format: int64
+        name:
+          type: string
+          description: Name of the Saved Filter Set, is optional when referencing
+            one
+        subtype:
+          type: string
+          description: Type of Saved Filter Set, may be CUSTOM for user-created or
+            QUICKPICK for meltwater-created, is optional when referencing one
+          enum:
+            - custom
+            - quickpick
+    EmbeddedFilterSet:
+      type: object
+    KeywordQuery:
+      required:
+        - case_sensitivity
+      type: object
+      properties:
+        source_selection_id:
+          type: integer
+          description: The optional source selection id for the search query (mi only)
+          format: int64
+        filter_set:
+          $ref: '#/components/schemas/FilterSet'
+        case_sensitivity:
+          type: string
+          description: The case sensitivity for this query
+          enum:
+            - 'yes'
+            - 'no'
+            - hybrid
+        not_keywords:
+          type: array
+          items:
+            type: string
+          description: None of these keywords should match
+        any_keywords:
+          type: array
+          items:
+            type: string
+          description: At least one of these keywords must match
+        all_keywords:
+          type: array
+          items:
+            type: string
+          description: All of these keywords must match
+    CombinedQuery:
+      type: object
+      properties:
+        source_selection_id:
+          type: integer
+          description: The optional source selection id for the search query (mi only)
+          format: int64
+        filter_set:
+          $ref: '#/components/schemas/FilterSet'
+        not_searches:
+          type: array
+          items:
+            type: integer
+            format: int64
+          description: None of these searches should match
+        any_searches:
+          type: array
+          items:
+            type: integer
+            format: int64
+          description: At least one of these searches must match
+        all_searches:
+          type: array
+          items:
+            type: integer
+            format: int64
+          description: All of these searches must match
+    Errors:
+      required:
+        - type
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetails'
+          description: List of problems with the request
+        type:
+          type: string
+          enum:
+            - NotFound
+            - ServiceUnavailable
+            - Unauthorized
+            - ValidationFailed
+      description: Errors
+      discriminator:
+        propertyName: type
+    ErrorDetails:
+      required:
+        - type
+        - title
+        - details
+      type: object
+      properties:
+        type:
+          type: string
+          description: Category of error
+        title:
+          type: string
+          description: Title of error
+        details:
+          type: string
+          description: Details about the error
+    SingleSearch:
+      required:
+        - search
+      type: object
+      properties:
+        search:
+          $ref: '#/components/schemas/SearchV2'
+      title: Search Resource
+      description: Search Resource
+      additionalProperties: false
+    SearchV2:
+      required:
+        - type
+        - category
+        - id
+        - name
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - news
+            - social
+            - broadcast
+          description: The type of content that the search is for
+        category:
+          type: string
+          enum:
+            - mi
+            - explore
+        updated:
+          type: string
+          format: date-time
+          example: '2020-08-23T08:25:56.000Z'
+          description: UTC date time (in ISO-8601 format) when the search was last
+            updated
+        id:
+          type: integer
+          format: int64
+          example: 1024
+          description: Identifier
+        name:
+          type: string
+          example: Electric cars
+          description: Search name
+        query:
+          $ref: '#/components/schemas/Query'
+        search_id:
+          type: integer
+          format: int64
+          example: 1024
+          description: DEPRECATED. Use "id" instead.
+      title: Search
+      example:
+        updated: '2020-08-23T08:25:56.000Z'
+        type: news
+        search_id: 1999
+        query:
+          type: boolean
+          source_selection_id: 1
+          case_sensitivity: false
+          boolean: Tesla OR (Volvo NEAR electric)
+        name: Electric cars
+        id: 1999
+      description: Search
+      additionalProperties: false
+    Unit:
+      type: object
+    SearchListResponse:
+      type: object
+      properties:
+        searches:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchV2'
+      title: Search List Response
+      required:
+        - searches
+      description: Search List Response
+      additionalProperties: false
+    SourceSelectionList:
+      type: object
+      properties:
+        source_selections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceSelection'
+      title: Source Selection List
+      items:
+        $ref: '#/components/schemas/SourceSelection'
+      description: Source Selection List
+    SourceSelection:
+      required:
+        - type
+        - name
+        - id
+        - custom
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of searches this source selection can be used for
+          enum:
+            - news
+            - social
+            - broadcast
+          example: news
+        name:
+          type: string
+          description: Source selection name
+          example: German and english news
+        id:
+          type: integer
+          description: Source selection unique identifier
+          format: int64
+          example: 34512
+        custom:
+          type: boolean
+          description: If this source selection is a custom one or not
+          example: true
+      title: Source Selection
+      example:
+        type: news
+        name: All Sources
+        id: 1
+        custom: false
+      description: Source Selection
+      additionalProperties: false
+    CompanyList:
+      type: object
+      properties:
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+      title: Company List
+      items:
+        $ref: '#/components/schemas/Company'
+      description: Company List
+    Company:
+      required:
+        - name
+        - id
+      type: object
+      properties:
+        name:
+          type: string
+          description: Company name
+          example: Meltwater
+        id:
+          type: string
+          description: Company unique identifier
+          example: 61d07a1eb6b501051b5af3d7
+      title: Company
+      example:
+        name: Meltwater
+        id: 61d07a1eb6b501051b5af3d7
+      description: Company
+      additionalProperties: false
+    TagList:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+      title: Tag List
+      items:
+        $ref: '#/components/schemas/Tag'
+      description: Tag List
+    Tag:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tag name
+          example: My Custom Tag
+      title: Tag
+      example:
+        name: My Custom Tag
+      description: Tag
+      additionalProperties: false
+    SearchCountResponse:
+      required:
+        - count
+      type: object
+      properties:
+        count:
+          $ref: '#/components/schemas/Count'
+      title: Search Count
+      description: Number of results for the search
+      additionalProperties: false
+    Count:
+      required:
+        - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total count
+          format: int64
+          example: 901382
+      description: Number of results for the search
+      title: Count
+      additionalProperties: false
+    FilterSetList:
+      type: object
+      properties:
+        filter_sets:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterSet'
+    ValidationFailed:
+      required:
+        - errors
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A message describing, in brief, the problem."
+        errors:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+              description: A description of the problem encountered on this field.
+          description: "A breakdown of each problem encountered, by field."
+      example:
+        message: Validation Failed
+        errors:
+          start:
+            - '''foo'' is not a valid ISO 8601 local timestamp'
+          end:
+            - Missing required parameter
+    SummaryResponse:
+      required:
+        - sentiment
+        - time_series
+        - top_countries
+        - top_languages
+        - unique_authors
+        - volume
+      type: object
+      properties:
+        unique_authors:
+          type: integer
+          format: int64
+        top_countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryStats'
+        sentiment:
+          $ref: '#/components/schemas/Sentiments'
+        top_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageStats'
+        time_series:
+          type: array
+          items:
+            $ref: '#/components/schemas/Day'
+        volume:
+          $ref: '#/components/schemas/Volume'
+      description: SummaryResponse
+    Volume:
+      required:
+        - document_count
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        per_day:
+          type: integer
+          format: int64
+        per_hour:
+          type: integer
+          format: int64
+      description: Volume
+    CountryStats:
+      required:
+        - country_code
+        - document_count
+        - percentage
+      type: object
+      properties:
+        country_code:
+          type: string
+        document_count:
+          type: integer
+          format: int64
+        percentage:
+          type: number
+          format: double
+      description: CountryStats
+    TopSharedResponse:
+      required:
+        - document_count
+        - results
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+      description: TopSharedResponse
+    Twitter:
+      type: object
+      properties:
+        followers:
+          type: integer
+          format: int64
+        following:
+          type: integer
+          format: int64
+        external_id:
+          type: string
+      description: Twitter
+    NotFound:
+      required:
+        - errors
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A message describing, in brief, the problem."
+        errors:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+              description: A description of the problem encountered on this field.
+          description: "A breakdown of each problem encountered, by field."
+      example:
+        message: Not Found
+        errors:
+          :searchId:
+            - A Saved Search with that ID could not be found
+    SentimentStats:
+      required:
+        - document_count
+        - percentage
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        percentage:
+          type: number
+          format: double
+      description: SentimentStats
+    Entity:
+      required:
+        - document_count
+        - entity
+        - percentage
+      type: object
+      properties:
+        entity:
+          type: string
+        document_count:
+          type: integer
+          format: int64
+        percentage:
+          type: number
+          format: double
+      description: Entity
+    Day:
+      required:
+        - date
+        - document_count
+        - hours
+      type: object
+      properties:
+        date:
+          title: "An ISO8601 date, excluding time and timezone/offset."
+          type: string
+          description: "An ISO8601 date, excluding time and timezone/offset.\n\nThe\
+            \ year, month and day formatted according to ISO8601. The date\nrepresents\
+            \ the local date at the timezone given in the `tz` parameter."
+          format: date
+        document_count:
+          type: integer
+          format: int64
+        hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hour'
+      description: Day
+    LanguageStats:
+      required:
+        - document_count
+        - language_code
+        - percentage
+      type: object
+      properties:
+        language_code:
+          type: string
+        document_count:
+          type: integer
+          format: int64
+        percentage:
+          type: number
+          format: double
+      description: LanguageStats
+    AnalyticsTag:
+      required:
+        - document_count
+        - percentage
+        - tag
+      type: object
+      properties:
+        tag:
+          type: string
+        document_count:
+          type: integer
+          format: int64
+        percentage:
+          type: number
+          format: double
+      description: Tag
+    AnalyticsServiceUnavailable:
+      description: ServiceUnavailable
+      example:
+        message: Service Unavailable
+        errors: { }
+      allOf:
+        - $ref: '#/components/schemas/Errors'
+        - type: object
+          properties:
+            message:
+              type: string
+          description: ServiceUnavailable
+    Hour:
+      required:
+        - document_count
+        - timestamp
+      type: object
+      properties:
+        timestamp:
+          title: An ISO8601 date-time.
+          type: string
+          description: "An ISO8601 date-time, including timezone offset.\n\nThe timezone\
+            \ offset is an offset in minutes from UTC."
+          format: date-time
+        document_count:
+          type: integer
+          format: int64
+      description: Hour
+    Result:
+      required:
+        - author
+        - document_count
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/Author'
+        document_count:
+          type: integer
+          format: int64
+      description: Result
+    Document:
+      required:
+        - author
+        - shares
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/Author'
+        url:
+          type: string
+        country_code:
+          type: string
+        shares:
+          $ref: '#/components/schemas/Shares'
+        language_code:
+          type: string
+        external_id:
+          type: string
+        created_at:
+          title: An ISO8601 date-time.
+          type: string
+          description: "An ISO8601 date-time, including timezone offset.\n\nThe timezone\
+            \ offset is an offset in minutes from UTC."
+          format: date-time
+      description: Document
+    Author:
+      type: object
+      properties:
+        username:
+          type: string
+        display_name:
+          type: string
+        twitter:
+          $ref: '#/components/schemas/Twitter'
+        avatar_url:
+          type: string
+        authority:
+          type: integer
+          format: int64
+      description: Author
+    Shares:
+      type: object
+      properties:
+        retweets:
+          type: integer
+          format: int64
+        likes:
+          type: integer
+          format: int64
+      description: Shares
+    Keyphrase:
+      required:
+        - document_count
+        - keyphrase
+        - percentage
+      type: object
+      properties:
+        keyphrase:
+          type: string
+        document_count:
+          type: integer
+          format: int64
+        percentage:
+          type: number
+          format: double
+      description: Keyphrase
+    TopTagsResponse:
+      required:
+        - document_count
+        - tags
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsTag'
+      description: TopTagsResponse
+    TopKeyphrasesResponse:
+      required:
+        - document_count
+        - keyphrases
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        keyphrases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Keyphrase'
+      description: TopKeyphrasesResponse
+    Unauthorized:
+      required:
+        - errors
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A message describing, in brief, the problem."
+        errors:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+              description: A description of the problem encountered on this field.
+          description: "A breakdown of each problem encountered, by field."
+      example:
+        message: Unauthorized
+        errors:
+          /v1/analytics/:searchId/top_shared:
+            - You do not have permission to access this resource.
+    Sentiments:
+      required:
+        - negative
+        - neutral
+        - positive
+        - unknown
+      type: object
+      properties:
+        positive:
+          $ref: '#/components/schemas/SentimentStats'
+        negative:
+          $ref: '#/components/schemas/SentimentStats'
+        neutral:
+          $ref: '#/components/schemas/SentimentStats'
+        unknown:
+          $ref: '#/components/schemas/SentimentStats'
+      description: Sentiments
+    TopEntitiesResponse:
+      required:
+        - document_count
+        - entities
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entity'
+      description: TopEntitiesResponse
+    TopSourcesResponse:
+      required:
+        - document_count
+        - sources
+      type: object
+      properties:
+        document_count:
+          type: integer
+          format: int64
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Result'
+      description: TopSourcesResponse
+    ServiceUnavailable:
+      type: object
+      title: Service Unavailable
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            title: Error object
+            required:
+              - type
+              - details
+              - title
+            properties:
+              type:
+                type: string
+                example: VALIDATION
+                description: Category of error
+              title:
+                type: string
+                example: 'Validation error for field: type'
+                description: Title of error
+              details:
+                type: string
+                example: This field cannot be updated
+                description: Details about the error
+            additionalProperties: false
+          description: List of problems with the request
+      example:
+        errors:
+          - type: SEARCH
+            title: Service unavailable
+            details: Temporarily unable to handle the request, try again later
+      description: Service Unavailable
+    SearchId:
+      type: integer
+    SearchDetails:
+      type: object
+      title: Search details
+      required:
+        - name
+        - id
+      properties:
+        name:
+          type: string
+          example: Elections
+          description: Search name
+        id:
+          type: integer
+          example: 123
+          description: Search id
+      additionalProperties: false
+    RecurringExportResult:
+      type: object
+      title: Recurring export
+      required:
+        - searches
+        - company_name
+        - id
+      properties:
+        window_weekday:
+          type: integer
+          description: 'An integer representation of what day of the week the export
+            window starts. Integer values are: Monday=1, Tuesday=2, Wednesday=3, Thursday=4,
+            Friday=5, Saturday=6, Sunday=7 Defaults to 1'
+          default: 1
+        window_time_unit:
+          type: string
+          enum:
+            - DAY
+            - WEEK
+            - MONTH
+          description: Window Time Unit. The time unit the export window represents.
+            Defaults to "DAY"
+          default: DAY
+        window_time:
+          type: string
+          description: Window Time. The time of day the export window begins.Defaults
+            to "00:00:00"
+          default: 00:00:00
+        window_size:
+          type: integer
+          description: Window size. The number of 'window_time_unit's the export window
+            covers. Defaults to 1
+          default: 1
+        window_monthday:
+          type: integer
+          description: An integer representation of what day of the month the export
+            window starts. Integer values 1-28 represent the day of the month e.g.
+            1 represents 1st, 2 represents the 2nd, etc. Integer value 0 represents
+            the last day of the month. Defaults to 1
+          default: 1
+        updated_at:
+          type: string
+          description: The datetime the export was last updated
+        timezone:
+          type: string
+          description: Timezone for window_time field. Must be a valid timezone in
+            the IANA database. Defaults to "Etc/UTC"
+          default: Etc/UTC
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          description: List of tag names used for the export
+        status_reason:
+          type: string
+          description: Optional explanation for current status
+        status:
+          type: string
+          enum:
+            - PENDING
+            - ACTIVE
+            - CANCELLED
+          description: Current status of the recurring export
+        searches:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchDetails'
+          description: List of searches used for the export
+        next_run_date:
+          type: string
+          description: Next Run Date - the datetime on which your export refresh will
+            start.
+        inserted_at:
+          type: string
+          description: The datetime the export was created
+        id:
+          type: integer
+          description: ID of the export
+        data_url:
+          type: string
+          description: The URL at which the export data can be retrieved
+        company_name:
+          type: string
+          description: Company the export belongs to
+    RecurringExportResponse:
+      type: object
+      title: Recurring export Response
+      required:
+        - recurring_export
+      properties:
+        recurring_export:
+          $ref: '#/components/schemas/RecurringExportResult'
+      description: Recurring export Response
+      additionalProperties: false
+    RecurringExportRequest:
+      type: object
+      title: Recurring export request
+      properties:
+        recurring_export:
+          $ref: '#/components/schemas/RecurringExport'
+      description: POST body for creating a recurring export
+    RecurringExportListResponse:
+      type: object
+      title: Recurring export list response
+      required:
+        - recurring_exports
+      properties:
+        recurring_exports:
+          $ref: '#/components/schemas/RecurringExportList'
+      description: Recurring export list response
+      additionalProperties: false
+    RecurringExportList:
+      type: array
+      title: Results
+      items:
+        $ref: '#/components/schemas/RecurringExportResult'
+      description: A collection of recurring export results
+    RecurringExport:
+      type: object
+      title: Recurring export
+      required:
+        - search_ids
+      properties:
+        window_weekday:
+          type: integer
+          description: 'An integer representation of what day of the week the export
+            window starts. Integer values are: Monday=1, Tuesday=2, Wednesday=3, Thursday=4,
+            Friday=5, Saturday=6, Sunday=7 Defaults to 1'
+          default: 1
+        window_time_unit:
+          type: string
+          enum:
+            - DAY
+            - WEEK
+            - MONTH
+          description: Window Time Unit. The time unit the export window represents.
+            Defaults to "DAY"
+          default: DAY
+        window_time:
+          type: string
+          description: Window Time. The time of day the export window begins. Defaults
+            to "00:00:00"
+          default: 00:00:00
+        window_size:
+          type: integer
+          description: Window size. The number of 'window_time_unit's the export window
+            covers Defaults to 1
+          default: 1
+        window_monthday:
+          type: integer
+          description: An integer representation of what day of the month the export
+            window starts. Integer values 1-28 represent the day of the month e.g.
+            1 represents 1st, 2 represents the 2nd, etc. Integer value 0 represents
+            the last day of the month. Defaults to 1
+          default: 1
+        timezone:
+          type: string
+          description: Timezone for window_time field. Must be a valid timezone in
+            the IANA database. Defaults to "Etc/UTC"
+          default: Etc/UTC
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          example:
+            - tag
+          description: List of tag names
+        search_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchId'
+          example:
+            - 123
+          description: List of search ids
+      example:
+        window_time_unit: DAY
+        window_time: 00:00:00
+        window_size: 1
+        timezone: Etc/UTC
+        tags:
+          - tag
+        search_ids:
+          - 123
+      description: A recurring export
+    OneTimeExportResult:
+      type: object
+      title: One-time export
+      required:
+        - end_date
+        - start_date
+        - searches
+        - company_name
+        - id
+      properties:
+        updated_at:
+          type: string
+          description: The datetime the export was last updated
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          description: List of tag names used for the export
+        status_reason:
+          type: string
+          description: Optional explanation for current status
+        status:
+          type: string
+          enum:
+            - PENDING
+            - FINISHED
+            - CANCELLED
+            - EXPIRED
+          description: Current status of the one-time export
+        start_date:
+          type: string
+          format: datetime
+          example: '2020-03-25T00:00:00Z'
+          description: Start date of the export (UTC) in ISO 8601 format
+        searches:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchDetails'
+          description: List of searches used for the export
+        inserted_at:
+          type: string
+          description: The datetime the export was created
+        id:
+          type: integer
+          description: ID of the export
+        end_date:
+          type: string
+          format: datetime
+          example: '2020-03-29T23:59:59Z'
+          description: End date of the export (UTC) in ISO 8601 format
+        data_url:
+          type: string
+          description: The URL at which the export data can be retrieved
+        company_name:
+          type: string
+          description: Company the export belongs to
+    OneTimeExportResponse:
+      type: object
+      title: One-time export Response
+      required:
+        - onetime_export
+      properties:
+        onetime_export:
+          $ref: '#/components/schemas/OneTimeExportResult'
+      description: One-time export Response
+      additionalProperties: false
+    OneTimeExportRequest:
+      type: object
+      title: One-time export request
+      properties:
+        onetime_export:
+          $ref: '#/components/schemas/OneTimeExport'
+      description: POST body for creating a one-time export
+    OneTimeExportListResponse:
+      type: object
+      title: One-time export list response
+      required:
+        - onetime_exports
+      properties:
+        onetime_exports:
+          $ref: '#/components/schemas/OneTimeExportList'
+      description: One-time export list response
+      additionalProperties: false
+    OneTimeExportList:
+      type: array
+      title: Results
+      items:
+        $ref: '#/components/schemas/OneTimeExportResult'
+      description: A collection of one-time export results
+    OneTimeExport:
+      type: object
+      title: One-time export
+      required:
+        - end_date
+        - start_date
+        - search_ids
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          example:
+            - tag
+          description: List of tag names
+        start_date:
+          type: string
+          format: datetime
+          example: '2020-03-25T00:00:00Z'
+          description: Start date (UTC) in ISO 8601 standard.
+
+            E.g. "2020-03-25T00:00:00Z"
+        search_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchId'
+          example:
+            - 123
+          description: List of search ids
+        end_date:
+          type: string
+          format: datetime
+          example: '2020-03-29T23:59:59Z'
+          description: End date (UTC) in ISO 8601 standard.
+
+            E.g. "2020-03-29T23:59:59Z"
+      example:
+        tags:
+          - tag
+        start_date: '2020-03-25T00:00:00Z'
+        search_ids:
+          - 123
+        end_date: '2020-03-29T23:59:59Z'
+      description: A one-time export
+    ValidationMetadata:
+      type: object
+      title: Metadata
+      required:
+        - field
+      properties:
+        validation:
+          type: string
+          example: complexity
+          enum:
+            - syntax
+            - complexity
+            - length
+            - cast
+            - inclusion
+            - required
+            - content_type
+          description: The cause of the validation error
+        field:
+          type: string
+          example: boolean
+          description: Name of the field that failed its validation checks
+      description: Metadata for the error
+      additionalProperties: true
+    UnprocessableEntityCompanyId:
+      type: object
+      title: Invalid company id
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            title: Validation error
+            required:
+              - type
+              - details
+              - title
+            properties:
+              type:
+                type: string
+                example: VALIDATION
+                description: Category of error
+              title:
+                type: string
+                example: 'Validation error for field: type'
+                description: Title of error
+              meta:
+                $ref: '#/components/schemas/ValidationMetadata'
+              details:
+                type: string
+                example: This field cannot be updated
+                description: Details about the error
+            additionalProperties: false
+          description: List of problems with the request
+      example:
+        errors:
+          - type: VALIDATION
+            title: 'Validation error for field: company_id'
+            meta:
+              field: company_id
+            details: Company id is expected to contain alphanumeric characters only
+      description: Invalid company id
+    MissingResourceResponse:
+      type: object
+      title: Unknown resource
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            title: Error object
+            required:
+              - type
+              - details
+              - title
+            properties:
+              type:
+                type: string
+                example: VALIDATION
+                description: Category of error
+              title:
+                type: string
+                example: 'Validation error for field: type'
+                description: Title of error
+              details:
+                type: string
+                example: This field cannot be updated
+                description: Details about the error
+            additionalProperties: false
+          description: List of problems with the request
+      example:
+        errors:
+          - type: SEARCH
+            title: Unknown search
+            details: The search id (123) you provided is unknown
+      description: Unknown resource
+    InvalidPermissionsResponse:
+      type: object
+      title: Invalid Permissions
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            title: Error object
+            required:
+              - type
+              - details
+              - title
+            properties:
+              type:
+                type: string
+                example: VALIDATION
+                description: Category of error
+              title:
+                type: string
+                example: 'Validation error for field: type'
+                description: Title of error
+              details:
+                type: string
+                example: This field cannot be updated
+                description: Details about the error
+            additionalProperties: false
+          description: List of problems with the request
+      example:
+        errors:
+          - type: SEARCH
+            title: Missing company permissions
+            details: You do not have enough permissions to manage searches / source
+              selections for the given company
+      description: Invalid Permissions
+    UnauthorizedResponse:
+      type: object
+      title: Unauthorized request
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            title: Error object
+            required:
+              - type
+              - details
+              - title
+            properties:
+              type:
+                type: string
+                example: VALIDATION
+                description: Category of error
+              title:
+                type: string
+                example: "Validation error for field: type"
+                description: Title of error
+              details:
+                type: string
+                example: This field cannot be updated
+                description: Details about the error
+            additionalProperties: false
+          description: List of problems with the request
+      example:
+        errors:
+          - type: AUTH
+            title: Unauthorized
+            details: Invalid or expired authorization header
+      description: Unauthorized request
+    InternalServerErrorResponse:
+      type: object
+      title: Internal Server error
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            title: Error object
+            required:
+              - type
+              - details
+              - title
+            properties:
+              type:
+                type: string
+                example: VALIDATION
+                description: Category of error
+              title:
+                type: string
+                example: 'Validation error for field: type'
+                description: Title of error
+              details:
+                type: string
+                example: This field cannot be updated
+                description: Details about the error
+            additionalProperties: false
+          description: List of problems with the request
+      example:
+        errors:
+          - type: INTERNAL
+            title: Internal Server error
+            details: Something went wrong behind the scenes...
+      description: Internal Server error
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: apikey
+      in: header

@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Terraform
+.terraform/
+crash.log
+terraform-provider-meltwater
+terraform.tfstate
+terraform.tfstate.backup
