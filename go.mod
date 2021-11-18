@@ -52,7 +52,7 @@ require (
 	github.com/posener/complete v1.2.1 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/afero v1.2.1 // indirect
-	github.com/ulikunitz/xz v0.5.5 // indirect
+	github.com/ulikunitz/xz v0.5.8 // indirect
 	github.com/vmihailenco/msgpack v4.0.1+incompatible // indirect
 	github.com/zclconf/go-cty v1.0.1-0.20190708163926-19588f92a98f // indirect
 	github.com/zclconf/go-cty-yaml v1.0.1 // indirect
