@@ -11,4 +11,5 @@ package swagger
 
 // Query associated with a search
 type Query struct {
+	OneOfQuery
 }

@@ -10,7 +10,10 @@
 package swagger
 
 type OneOfQuery struct {
-    BooleanQuery
-    KeywordQuery
-    CombinedQuery
+	Type            string `json:"type"`
+	CaseSensitivity string `json:"case_sensitivity,omitempty"`
+
+	BooleanQuery
+	KeywordQuery
+	CombinedQuery
 }

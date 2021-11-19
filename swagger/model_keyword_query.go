@@ -11,14 +11,12 @@ package swagger
 
 type KeywordQuery struct {
 	// The optional source selection id for the search query (mi only)
-	SourceSelectionId int64 `json:"source_selection_id,omitempty"`
-	FilterSet *FilterSet `json:"filter_set,omitempty"`
-	// The case sensitivity for this query
-	CaseSensitivity string `json:"case_sensitivity"`
+	SourceSelectionId int64      `json:"source_selection_id,omitempty"`
+	FilterSet         *FilterSet `json:"filter_set,omitempty"`
 	// None of these keywords should match
-	NotKeywords []string `json:"not_keywords,omitempty"`
+	NotKeywords []string `json:"not_keywords"`
 	// At least one of these keywords must match
-	AnyKeywords []string `json:"any_keywords,omitempty"`
+	AnyKeywords []string `json:"any_keywords"`
 	// All of these keywords must match
-	AllKeywords []string `json:"all_keywords,omitempty"`
+	AllKeywords []string `json:"all_keywords"`
 }

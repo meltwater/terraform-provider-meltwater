@@ -6,7 +6,6 @@ require (
 	github.com/antihax/optional v1.0.0
 	github.com/go-test/deep v1.0.1
 	github.com/hashicorp/terraform v0.12.6
-	github.com/plutov/paypal/v4 v4.3.7
 	golang.org/x/oauth2 v0.0.0-20190220154721-9b3c75971fc9
 )
 
@@ -52,6 +51,7 @@ require (
 	github.com/posener/complete v1.2.1 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/afero v1.2.1 // indirect
+	github.com/stretchr/testify v1.6.0 // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	github.com/vmihailenco/msgpack v4.0.1+incompatible // indirect
 	github.com/zclconf/go-cty v1.0.1-0.20190708163926-19588f92a98f // indirect

@@ -14,7 +14,7 @@ type SearchRequestV2 struct {
 	// The type of content that the search is for
 	Type_ string `json:"type"`
 	// The name associated with this search
-	Name string `json:"name"`
+	Name  string `json:"name"`
 	Query *Query `json:"query"`
 	// The category of search to create this under, defaults to `mi`
 	Category string `json:"category,omitempty"`

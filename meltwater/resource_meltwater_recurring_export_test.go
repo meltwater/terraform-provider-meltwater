@@ -38,6 +38,16 @@ func TestRecurringExportResourceSchema(t *testing.T) {
 			Optional: true,
 			Required: false,
 		},
+		"window_monthday": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Required: false,
+		},
+		"window_weekday": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Required: false,
+		},
 	}
 
 	actualSchemaSimplified := map[string]SchemaSimplified{}

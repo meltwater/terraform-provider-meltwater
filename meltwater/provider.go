@@ -22,6 +22,7 @@ func Provider() terraform.ResourceProvider {
 	// Internal mapping of resources to ensure matching interface
 	internalResourceMapping := map[string]TerraformResource{
 		"meltwater_recurring_export": RecurringExportResource{},
+		"meltwater_search":           SearchResource{},
 	}
 
 	// Map to the terraform resource from our internal representation
