@@ -1,6 +1,8 @@
 # Meltwater Terraform Provider
 A Terraform provider for Meltwater based on the persistent/infrastructure parts of the Meltwater API. Such as setting up webhooks and recurring exports.
 
+[Terraform registry documentation](https://registry.terraform.io/providers/meltwater/meltwater)
+
 ## Requirements
 
 *	[Terraform](https://www.terraform.io/downloads.html) 0.11.x to 0.13.x
@@ -54,7 +56,7 @@ terraform {
   required_providers {
     meltwater = {
       source = "meltwater/meltwater"
-      version = "<VERSION_TBC>"
+      version = "<VERSION_HERE>"
     }
   }
 }
