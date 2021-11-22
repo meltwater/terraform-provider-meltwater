@@ -144,8 +144,13 @@ func (r RecurringExportResource) Read(d *schema.ResourceData, m interface{}) err
 	d.Set("window_time_unit", strings.ToLower(recurringExport.WindowTimeUnit))
 	d.Set("window_time", recurringExport.WindowTime[0:8])
 	d.Set("window_size", recurringExport.WindowSize)
-	d.Set("window_monthday", recurringExport.WindowMonthday)
 	d.Set("window_weekday", recurringExport.WindowWeekday)
+
+	windowMonthDay := recurringExport.WindowMonthday
+	if windowMonthDay == 0 {
+		windowMonthDay = 1
+	}
+	d.Set("window_monthday", windowMonthDay)
 
 	return nil
 }

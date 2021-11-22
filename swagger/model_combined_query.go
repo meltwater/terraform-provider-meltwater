@@ -11,12 +11,12 @@ package swagger
 
 type CombinedQuery struct {
 	// The optional source selection id for the search query (mi only)
-	SourceSelectionId int64 `json:"source_selection_id,omitempty"`
-	FilterSet *FilterSet `json:"filter_set,omitempty"`
+	SourceSelectionId int64      `json:"source_selection_id,omitempty"`
+	FilterSet         *FilterSet `json:"filter_set,omitempty"`
 	// None of these searches should match
-	NotSearches []int64 `json:"not_searches,omitempty"`
+	NotSearches []int64 `json:"not_searches"`
 	// At least one of these searches must match
-	AnySearches []int64 `json:"any_searches,omitempty"`
+	AnySearches []int64 `json:"any_searches"`
 	// All of these searches must match
-	AllSearches []int64 `json:"all_searches,omitempty"`
+	AllSearches []int64 `json:"all_searches"`
 }

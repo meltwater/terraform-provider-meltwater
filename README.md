@@ -44,8 +44,10 @@ Your token is now accessible in your Terraform configuration as
 The example below demonstrates the following operations:
 
   * Create a recurring export
-  * TODO: Create a search
-  * TODO: Create a hook to receive matching documents
+  * Create a search
+    * Keyword search
+    * Combined search
+    * Boolean search
 
 ```hcl
 terraform {
@@ -66,8 +68,35 @@ provider "meltwater" {
   api_key = var.meltwater_api_key
 }
 
+resource "meltwater_search" "my_awesome_search" {
+  type = "social"
+  category = "explore"
+  name = "Golang - terraform"
+  query {
+
+    // One of keyword, combined or boolean
+
+    keyword {
+      case_sensitivity = "yes"
+      all_keywords = ["golang"]
+      any_keywords = []
+      not_keywords = ["foobar"]
+    }
+
+    combined {
+      all_searches = [16058498]
+      not_searches = [7912335]
+    }
+
+    boolean {
+      case_sensitivity = "hybrid"
+      boolean = "(SourceName: /r/ProgrammingHumour OR SourceName: /r/Golang) AND metaData.discussionType:\"og\" AND language:\"fr\""
+    }
+  }
+}
+
 resource "meltwater_recurring_export" "my_awesome_recurring_export" {
-  search_id = 16058498
+  search_id = meltwater_search.my_awesome_search.id
   timezone = "Europe/London"
   window_time_unit = "week"
   window_time = "00:00:00"
