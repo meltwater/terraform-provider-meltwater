@@ -46,14 +46,16 @@ func (r SearchResource) Schema() map[string]*schema.Schema {
 			Description:  fmt.Sprintf("A search category must be one of: %s", strings.Join(r.searchCategories(), ",")),
 		},
 		"query": {
-			Type:        schema.TypeSet,
+			Type:        schema.TypeList,
+			MaxItems:    1,
 			Required:    true,
 			Description: "The container for the search query. Must include one of _TBC_",
 			//ValidateFunc: r.validateQuery(), List/Set validation is not supported in terraform yet
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"keyword": {
-						Type:        schema.TypeSet,
+						Type:        schema.TypeList,
+						MaxItems:    1,
 						Optional:    true,
 						Description: "Sets up a keyword query",
 						Elem: &schema.Resource{
@@ -87,7 +89,8 @@ func (r SearchResource) Schema() map[string]*schema.Schema {
 					},
 
 					"combined": {
-						Type:        schema.TypeSet,
+						Type:        schema.TypeList,
+						MaxItems:    1,
 						Optional:    true,
 						Description: "Sets up a combined query",
 						Elem: &schema.Resource{
@@ -115,7 +118,8 @@ func (r SearchResource) Schema() map[string]*schema.Schema {
 					},
 
 					"boolean": {
-						Type:        schema.TypeSet,
+						Type:        schema.TypeList,
+						MaxItems:    1,
 						Optional:    true,
 						Description: "Sets up a boolean query",
 						Elem: &schema.Resource{
@@ -322,8 +326,8 @@ func (r SearchResource) searchCategories() []string {
 }
 
 func (r SearchResource) resourceDataToSearchRequest(d *schema.ResourceData) (swagger.SingleSearchRequest, error) {
-	querySet := d.Get("query").(*schema.Set)
-	query := querySet.List()[0].(map[string]interface{})
+	queryList := d.Get("query").([]interface{})
+	query := queryList[0].(map[string]interface{})
 	searchRequest := swagger.SingleSearchRequest{}
 	searchRequestQuery := &swagger.Query{
 		OneOfQuery: swagger.OneOfQuery{},
@@ -334,14 +338,14 @@ func (r SearchResource) resourceDataToSearchRequest(d *schema.ResourceData) (swa
 
 	// Check for keyword query existing
 	if keywordVal, ok := query["keyword"]; ok {
-		keywordSet := keywordVal.(*schema.Set)
+		keywordList := keywordVal.([]interface{})
 
 		// We're adding up all the queries to make sure by the end that we only have one
-		queryCount += keywordSet.Len()
+		queryCount += len(keywordList)
 
 		// Require only one keyword set
-		if keywordSet.Len() == 1 {
-			keyword := keywordSet.List()[0].(map[string]interface{})
+		if len(keywordList) == 1 {
+			keyword := keywordList[0].(map[string]interface{})
 
 			allKeywords := []string{}
 			for _, keywordItem := range keyword["all_keywords"].([]interface{}) {
@@ -373,14 +377,14 @@ func (r SearchResource) resourceDataToSearchRequest(d *schema.ResourceData) (swa
 
 	// Check for combined query existing
 	if combinedVal, ok := query["combined"]; ok {
-		combinedSet := combinedVal.(*schema.Set)
+		combinedList := combinedVal.([]interface{})
 
 		// We're adding up all the queries to make sure by the end that we only have one
-		queryCount += combinedSet.Len()
+		queryCount += len(combinedList)
 
 		// Require only one keyword set
-		if combinedSet.Len() == 1 {
-			combined := combinedSet.List()[0].(map[string]interface{})
+		if len(combinedList) == 1 {
+			combined := combinedList[0].(map[string]interface{})
 
 			allSearches := []int64{}
 			for _, searchId := range combined["all_searches"].([]interface{}) {
@@ -411,14 +415,14 @@ func (r SearchResource) resourceDataToSearchRequest(d *schema.ResourceData) (swa
 
 	// Check for boolean query existing
 	if booleanVal, ok := query["boolean"]; ok {
-		booleanSet := booleanVal.(*schema.Set)
+		booleanList := booleanVal.([]interface{})
 
 		// We're adding up all the queries to make sure by the end that we only have one
-		queryCount += booleanSet.Len()
+		queryCount += len(booleanList)
 
 		// Require only one keyword set
-		if booleanSet.Len() == 1 {
-			boolean := booleanSet.List()[0].(map[string]interface{})
+		if len(booleanList) == 1 {
+			boolean := booleanList[0].(map[string]interface{})
 			booleanString := boolean["boolean"].(string)
 			if len(booleanString) == 0 {
 				return searchRequest, errors.New("you need to supply a boolean string")
@@ -455,49 +459,25 @@ func (r SearchResource) resourceDataToSearchRequest(d *schema.ResourceData) (swa
 // this is not supported yet :(
 func (r SearchResource) validateQuery() schema.SchemaValidateFunc {
 	return func(i interface{}, k string) (s []string, es []error) {
-		querySet := i.(*schema.Set)
-		// Require only one query set
-		if querySet.Len() != 1 {
-			es = append(es, fmt.Errorf("exactly one query block is required here, got %d", querySet.Len()))
+
+		// Check to see if we have anything other than a single query block
+		queryList := i.([]interface{})
+		if len(queryList) != 1 {
+			es = append(es, fmt.Errorf("you need exactly one query block, got %d", len(queryList)))
+			return
 		}
 
-		query := querySet.List()[0].(map[string]interface{})
-
-		// Keep track of queries
-		queryCount := 0
-
-		// Check for keyword query
-		if val, ok := query["keyword"]; ok {
-			set := val.(*schema.Set)
-			queryCount += set.Len()
-			if set.Len() > 1 {
-				es = append(es, fmt.Errorf("you can't have more than one keyword block here, got %d", set.Len()))
-			}
-		}
-
-		// Check for combined query
-		if val, ok := query["combined"]; ok {
-			set := val.(*schema.Set)
-			queryCount += set.Len()
-			if set.Len() > 1 {
-				es = append(es, fmt.Errorf("you can't have more than one combined block here, got %d", set.Len()))
-			}
-		}
-
-		// Check for combined query
-		if val, ok := query["boolean"]; ok {
-			set := val.(*schema.Set)
-			queryCount += set.Len()
-			if set.Len() > 1 {
-				es = append(es, fmt.Errorf("you can't have more than one boolean block here, got %d", set.Len()))
-			}
-		}
+		// We can only allow a single item across all 3 query types
+		queryMap := queryList[0].(map[string]interface{})
+		booleanList := queryMap["boolean"].([]interface{})
+		combinedList := queryMap["combined"].([]interface{})
+		keywordList := queryMap["keyword"].([]interface{})
+		queryCount := len(booleanList) + len(combinedList) + len(keywordList)
 
 		// Check overall count
 		if queryCount == 0 {
 			es = append(es, fmt.Errorf("one of keyword, combined or boolean must be set within query, got %d", queryCount))
-		}
-		if queryCount != 1 {
+		} else if queryCount != 1 {
 			es = append(es, fmt.Errorf("one of keyword, combined or boolean can exist within query, got %d", queryCount))
 		}
 
