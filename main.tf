@@ -25,14 +25,14 @@ resource "meltwater_search" "my_awesome_search" {
     /*boolean {
       case_sensitivity = "hybrid"
       boolean = "(SourceName: /r/ProgrammingHumour OR SourceName: /r/Golang) AND metaData.discussionType:\"og\" AND language:\"fr\""
-    }/
+    }*/
   }
 }
 
-/*resource "meltwater_recurring_export" "my_awesome_recurring_export" {
+resource "meltwater_recurring_export" "my_awesome_recurring_export" {
   search_id = meltwater_search.my_awesome_search.id
   timezone = "Europe/Paris"
   window_time_unit = "week"
   window_time = "00:00:00"
   window_size = 1
-}*/
+}

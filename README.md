@@ -45,11 +45,11 @@ Your token is now accessible in your Terraform configuration as
 
 The example below demonstrates the following operations:
 
-  * Create a recurring export
   * Create a search
     * Keyword search
     * Combined search
     * Boolean search
+  * Create a recurring export
 
 ```hcl
 terraform {
